@@ -8,7 +8,13 @@ class BookSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Book
-        fields = ('pk', 'title', 'publisher', 'publishdate', 'book_category', 'url')
+        fields = ('pk', 'title', 'publisher', 'publishdate', 'book_category', 'url',)
+
+
+class BookSerializerModel(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = ('pk', 'title', 'publisher', 'publishdate', 'book_category')
 
 
 class MemberSerializer(serializers.HyperlinkedModelSerializer):
@@ -17,6 +23,12 @@ class MemberSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Member
         fields = ('pk', 'name', 'email', 'notelp', 'url')
+
+
+class MemberSerializerModel(serializers.ModelSerializer):
+    class Meta:
+        model = Member
+        fields = ('pk', 'name', 'email', 'notelp',)
 
 
 class BookCategorySerializer(serializers.HyperlinkedModelSerializer):
@@ -35,6 +47,8 @@ class OrderBookSerializer(serializers.HyperlinkedModelSerializer):
     book = serializers.SlugRelatedField(queryset=Book.objects.all(), slug_field='title')
     member = serializers.SlugRelatedField(queryset=Member.objects.all(), slug_field='name')
     url = serializers.HyperlinkedIdentityField(view_name='order-detail')
+    due_date = serializers.DateTimeField(format="'%m-%d-%Y", required=True)
+    date_borrow = serializers.DateTimeField(format='%m-%d-%Y')
 
     class Meta:
         model = Order
