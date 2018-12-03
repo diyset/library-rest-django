@@ -2,6 +2,8 @@
 ## Introduction
 Applikasi ini menggunakan framework django python 3
 
+## Collection API Postman
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://www.getpostman.com/collections/a51463bc080b7e30f6cd)
 ## Setup for deployment local
 1. Clone atau Fork terlebih dahulu repository git ini
 2. Pastikan anda sudah menginstall python 3 dan sudah meng setup environment variable nya terlebih dahulu pada pc anda
