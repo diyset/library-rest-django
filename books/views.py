@@ -1,28 +1,51 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.reverse import reverse
 from books.models import Book, Member, Order, BookCategory
-from books.serializer import BookSerializer, MemberSerializer, OrderBookSerializer, BookCategorySerializer
-from rest_framework.decorators import api_view
+from books.serializer import (BookSerializer,
+                              MemberSerializer,
+                              OrderBookSerializer,
+                              BookCategorySerializer,
+                              MemberSerializerModel,
+                              BookSerializerModel,
+                              )
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from django.contrib.auth import authenticate
+from rest_framework.authtoken.models import Token
+from rest_framework.permissions import AllowAny, IsAuthenticated
+
+
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes((AllowAny,))
+def Login(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+    if username is None or password is None:
+        return Response({'error': 'Provide both username or password'}, status=status.HTTP_400_BAD_REQUEST)
+    user = authenticate(username=username, password=password)
+    if not user:
+        return Response({'error': 'Invalid Credentials'}, status=status.HTTP_400_BAD_REQUEST)
+    token, _ = Token.objects.get_or_create(user=user)
+    return Response({'token': token.key}, status=status.HTTP_200_OK)
 
 
 @api_view(['GET', 'POST'])
 def book_list(request):
     if request.method == 'GET':
         books = Book.objects.all()
-        books_serializer = BookSerializer(books, many=True)
+        books_serializer = BookSerializerModel(books, many=True)
         return Response(books_serializer.data)
     elif request.method == 'POST':
-        book_serializer = BookSerializer(data=request.data)
+        book_serializer = BookSerializerModel(data=request.data)
         if book_serializer.is_valid():
             book_serializer.save()
-            return Response(book_serializer.data, status=status.HTTP_201_CREATED)
+            return Response({'error': False,
+                             'data': 'Success Saving `{}`'.format(request.data.get('title'))},
+                            status=status.HTTP_201_CREATED)
         return Response(book_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -52,14 +75,31 @@ def book_detail(request, pk):
 def member_list(request):
     if request.method == 'GET':
         members = Member.objects.all()
-        members_serializer = MemberSerializer(members, many=True)
-        return Response(members_serializer.data)
+        members_serializer = MemberSerializerModel(members, many=True)
+        if not members_serializer:
+            return Response({'error': True,
+                             'data': 'Not Found'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': False,
+                         'data': members_serializer.data}, status=status.HTTP_200_OK)
 
     elif request.method == 'POST':
-        member_serializer = BookSerializer(data=request.data)
+        member_serializer = MemberSerializerModel(data=request.data)
         if member_serializer.is_valid():
             member_serializer.save()
             return Response(member_serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def member_detail(request, pk):
+    try:
+        member = Member.objects.get(pk=pk)
+    except Member.DoesNotExist:
+        return Response({'error': 'Data Not Found'}, status=status.HTTP_404_NOT_FOUND)
+    if request.method == 'GET':
+        member_serializer = MemberSerializerModel(member)
+        return Response({'error': False,
+                         'data': member_serializer.data},
+                        status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
@@ -89,12 +129,14 @@ class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class BookCategoryList(generics.ListCreateAPIView):
+    permission_classes = (IsAuthenticated,)
     queryset = BookCategory.objects.all()
     serializer_class = BookCategorySerializer
     name = 'bookcategory-list'
 
 
 class BookList(generics.ListCreateAPIView):
+    permission_classes = (IsAuthenticated,)
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     name = 'book-list'
@@ -104,9 +146,11 @@ class MemberList(generics.ListCreateAPIView):
     queryset = Member.objects.all()
     serializer_class = MemberSerializer
     name = 'member-list'
+    permission_classes = (IsAuthenticated,)
 
 
 class OrderList(generics.ListCreateAPIView):
+    permission_classes = (IsAuthenticated,)
     queryset = Order.objects.all()
     serializer_class = OrderBookSerializer
     name = 'order-list'

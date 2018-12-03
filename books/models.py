@@ -1,5 +1,7 @@
 from django.db import models
 
+import uuid
+
 
 # Create your models here.
 
@@ -44,6 +46,7 @@ class Member(models.Model):
 
 
 class Order(models.Model):
+    code_borrow = models.CharField(max_length=8,null=True, blank=True, unique=True, default=uuid.uuid4().hex[:6].upper())
     book = models.ForeignKey(Book, related_name='books', on_delete=models.CASCADE, blank=True, null=True)
     member = models.ForeignKey(Member, related_name='members', on_delete=models.CASCADE, default=None, blank=True,
                                null=True)
