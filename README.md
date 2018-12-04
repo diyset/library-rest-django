@@ -1,6 +1,6 @@
 # Django Library Rest - Api
 ## Introduction
-Applikasi ini menggunakan framework django python 3
+#### Aplikasi ini menggunakan framework django python 3
 
 ## Collection API Postman
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://www.getpostman.com/collections/a51463bc080b7e30f6cd)
@@ -10,15 +10,15 @@ Applikasi ini menggunakan framework django python 3
 3. install virtualenv `pip install virtualenv`
 4. buat environment anda dengan perintah `virutalenv [nama env]`
 5. bila sudah dilakukan langkah pada point 2 dan 3, selanjutnya mengaktifkan virtualenv pada root project
-6. buka 'cmd' arahkan root ke project folder , lalu ketik `/[nama env]/Scripts/active`, karena saya sudah menambahkan environment saya yang beranama `myenv` bisa juga menggunakan ini
+6. buka `cmd` arahkan root ke project folder , lalu ketik `/[nama env]/Scripts/active`, karena saya sudah menambahkan environment saya yang beranama `myenv` bisa juga menggunakan ini
 7. jalankan perintah `cmd` dengan command `pip install -r requirements.txt`
 8. setelah sukses maka anda sudah menginstall semua library depdencies yang dibutuhkan
 9. setelah itu lakukan migrasi data ke database anda
 10. karena default saya menggunakan `sqlite3` dan jika anda ingin menggunakan database lain bisa kunjungi ini untuk lebih jelasnya  [DJango Doc Database](https://docs.djangoproject.com/en/2.1/ref/databases/)
-10. buka cmd ketik `python manage.py makemigrations`
-11. setelah itu ketik kembali di cmd `python manage.py migrate`
-12. buat super user terlebih dahulu ketik kembali di cmd `python manage.py createsuperuser` dan lengkapi optional yang ada
-13. buka cmd kembali dan ketik `python manage.py runserver` <- command ini berarti anda menjalakan dengan port default yaitu '8000'
+11. buka cmd ketik `python manage.py makemigrations`
+12. setelah itu ketik kembali di cmd `python manage.py migrate`
+13. buat super user terlebih dahulu ketik kembali di cmd `python manage.py createsuperuser` dan lengkapi optional yang ada
+14. buka cmd kembali dan ketik `python manage.py runserver` <- command ini berarti anda menjalakan dengan port default yaitu '8000'
 
 
 ## List Depedencies Pyip
@@ -47,3 +47,4 @@ Applikasi ini menggunakan framework django python 3
 23. social-auth-app-django==3.1.0
 24. social-auth-core==2.0.0
 25. urllib3==1.24.1
+----------------------
