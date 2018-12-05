@@ -130,6 +130,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS':
         'rest_framework.pagination.LimitOffsetPagination',
     'DATE_INPUT_FORMATS': [("%d-%m-%Y"), ],
+    'DEFAULT_RENDERER_CLASSES': ('rest_framework.renderers.JSONRenderer',),
     'PAGE_SIZE': 4,
     'DEFAULT_AUTHENTICATION_CLASSES': ('oauth2_provider.contrib.rest_framework.OAuth2Authentication',
                                        'rest_framework_social_oauth2.authentication.SocialAuthentication',
